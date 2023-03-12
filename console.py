@@ -6,22 +6,22 @@ import cmd
 import sys
 
 
-class commandIntepreter(cmd.Cmd):
+class HBNBCommand(cmd.Cmd):
     """ This is the console for the project interface
     having many use cases on objects
     to update, create and destroy"""
 
-    prompt = '(hbtn) '
+    prompt = '(hbnb) '
     """ This is a comment, i dnt yet know how to make it
     work in a loop in non-interactive mode, although it
     works but it immediately exists once it runs.
     But maybe thats how its suppose to work"""
     def emptyline(self):
-        """Returns an emoty line"""
+        """Returns an empty line"""
         pass
 
     def do_quit(self, line):
-        """Quits the console: ctrl+C"""
+        """Quit command to exit the program"""
         sys.exit()
 
     def do_EOF(self, line):
@@ -31,4 +31,4 @@ class commandIntepreter(cmd.Cmd):
 
 
 if __name__ == '__main__':
-    commandIntepreter().cmdloop()
+    HBNBCommand().cmdloop()
