@@ -1,3 +1,6 @@
+# AirBnB Clone - The Console                                                                                                     ![HolBnB clone](https://github.com/monoprosito/AirBnB_clone/blob/feature/console/hBnB.png?raw=true)                              Welcome to the AirBnB clone project! (The Holberton B&B)
+
+
 ## Description of the Project
 - This repository contains the code for AirBnB cloning, this is part of the team project required by alx swe programme as a requirement for learning the higher level language
 
