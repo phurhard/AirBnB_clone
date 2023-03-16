@@ -4,6 +4,7 @@ This is a command intepreter console for AirBnB clone project
 """
 import cmd
 import sys
+from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
@@ -28,6 +29,20 @@ class HBNBCommand(cmd.Cmd):
         """This method handles the EOF or ctrl+D"""
         print('\n')
         return True
+
+    def do_create(self, line):
+        '''Creates a new instance of BaseModel,
+        saves it to the JSO file and prints the id'''
+        classes = ['BaseModel']
+        command = self.parseline(line)[0]
+        if command in classes:
+            new_instance = eval(command)()
+            new_instance.save()
+            print(new_instance.id)
+        elif command == None:
+            print('** class name missing **')
+        else:
+            print("** class doesn't exist **")
 
 
 if __name__ == '__main__':
