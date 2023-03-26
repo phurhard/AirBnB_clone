@@ -2,6 +2,12 @@
 '''This class creates a storage for storing our objects created from previous running of the program and restores all objects created before'''
 import json
 from models.base_model import BaseModel
+from models.user import User
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
+from models.state import State
 
 
 class FileStorage():
@@ -22,7 +28,7 @@ class FileStorage():
     def save(self):
         '''Serializes __objects to JSON and stores it in the file: file_path'''
         json_dictionary = {}
-        for k,v in self.__objects.items(): 
+        for k,v in self.__objects.items():
             json_dictionary[k] = v.to_dict()
         with open(self.__file_path, 'w') as f:
             f.write(json.dumps(json_dictionary))
@@ -32,8 +38,8 @@ class FileStorage():
         try:
             with open(self.__file_path, 'r') as f:
                 base_file = json.loads(f.read())
-            for k,v in base_file.items():
-                self.__objects[k] = eval(v['__class__'])(**v)
+                for k,v in base_file.items():
+                    self.__objects[k] = eval(v['__class__'])(**v)
         except Exception as e:
-            pass
+            print(e)
 
