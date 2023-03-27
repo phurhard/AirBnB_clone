@@ -1,6 +1,16 @@
 header {
-	colo: white;
-	border-bottom: 1px #CCCCCC;
-	height:70px;
-	width:100%;
+	background-color: white;	
+	border-bottom: 1px solid #CCCCCC;
+	height: 70px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+header .logo{
+	background-image: url("../images/logo.png");
+	background-repeat: no-repeat;
+	width:150px;
+	height:60px;
+	margin-left: 20px;
 }

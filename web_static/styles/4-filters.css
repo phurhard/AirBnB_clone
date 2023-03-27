@@ -1,9 +1,11 @@
-.container .filters {
-	color: white;
+section.filters {
+	background-color: white;
 	height: 70px;
 	width: 100%;
-	border: 1px #DDDDDD;
+	border: 1px solid #DDDDDD;
 	border-radius: 4px;
+	display:flex;
+	align-items: center;
 }
 
 button {

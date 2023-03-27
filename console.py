@@ -162,7 +162,7 @@ class HBNBCommand(cmd.Cmd):
                 if method == 'show':
                     self.do_show(command+' '+instId)
                 if method == 'destroy':
-                    print(self.do_destroy(command+' '+instId))
+                    self.do_destroy(command+' '+instId)
                 if method == 'update':
                     if '{' in line:
                         attr = linesplit[2]
