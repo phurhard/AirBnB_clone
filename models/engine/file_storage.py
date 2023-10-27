@@ -23,13 +23,11 @@ class FileStorage():
 
     def new(self, obj):
         '''Creates a new instance of storage and sets in __objects the obj class name and id'''
-        self.__objects[obj.__class__.__name__+'.'+obj.id] = obj
+        self.__objects[f'{obj.__class__.__name__}.{obj.id}'] = obj
 
     def save(self):
         '''Serializes __objects to JSON and stores it in the file: file_path'''
-        json_dictionary = {}
-        for k,v in self.__objects.items():
-            json_dictionary[k] = v.to_dict()
+        json_dictionary = {k: v.to_dict() for k, v in self.__objects.items()}
         with open(self.__file_path, 'w') as f:
             f.write(json.dumps(json_dictionary))
 
