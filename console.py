@@ -45,9 +45,9 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, line):
         '''Creates an instance of BaseModel saves it to json n print its id'''
         command = self.parseline(line)[0]
-        if command == None:
+        if command is None:
             print('** class name missing **')
-        elif not (command in self.classes):
+        elif command not in self.classes:
             print('** class doesn\'t exist **')
         else:
             new_instance = eval(command)()
@@ -58,16 +58,16 @@ class HBNBCommand(cmd.Cmd):
         '''Prints the string representation of an instance based on the class name and id'''
         command = self.parseline(line)[0]
         arg = self.parseline(line)[1]
-        if command == None:
+        if command is None:
             print("** class name is missing **")
 
-        elif not (command in self.classes):
+        elif command not in self.classes:
             print("** class doesn't exist **")
         elif arg == '':
             print("** instance id missing **")
         else:
-            inst = storage.all().get(command+'.'+arg)
-            if inst == None:
+            inst = storage.all().get(f'{command}.{arg}')
+            if inst is None:
                 print("** no instance found **")
             else:
                 print(inst)
@@ -76,18 +76,18 @@ class HBNBCommand(cmd.Cmd):
         '''Deletes a class based on its id and instance name'''
         command = self.parseline(line)[0]
         arg = self.parseline(line)[1]
-        if command == None:
+        if command is None:
             print("** class name is missing **")
-        elif not (command in self.classes):
+        elif command not in self.classes:
             print("** class doesn't exist **")
         elif arg == '':
             print("** instance id missing **")
         else:
-            inst = storage.all().get(command+'.'+arg)
-            if inst == None:
+            inst = storage.all().get(f'{command}.{arg}')
+            if inst is None:
                 print("** no instance found **")
             else:
-                del storage.all()[command+'.'+arg]
+                del storage.all()[f'{command}.{arg}']
                 storage.save()
 
     def do_all(self, line):
@@ -95,16 +95,13 @@ class HBNBCommand(cmd.Cmd):
         baseModels = storage.all()
         model = self.parseline(line)[0]
         lst = []
-        if model == None:
-            for i in baseModels.values():
-                lst.append(str(i))
+        if model is None:
+            lst.extend(str(i) for i in baseModels.values())
             print(lst)
-        elif not (model in self.classes):
+        elif model not in self.classes:
             print("** class doesn't exist **")
         else:
-            for i in baseModels:
-                if i.startswith(model):
-                    lst.append(str(baseModels[i]))
+            lst.extend(str(baseModels[i]) for i in baseModels if i.startswith(model))
             print(lst)
 
     def do_update(self, line):
@@ -112,18 +109,18 @@ class HBNBCommand(cmd.Cmd):
 
         model = self.parseline(line)[0]
         attrbs = self.parseline(line)[1]
-        if not (attrbs == None):
+        if attrbs is not None:
             attrbs = shlex.split(attrbs)
             inst = attrbs[0]
-            instnf = storage.all().get(model+'.'+inst)
-        if model == None:
+            instnf = storage.all().get(f'{model}.{inst}')
+        if model is None:
             print("** class name missing **")
-        elif not (model in self.classes):
+        elif model not in self.classes:
             print("** class doesn't exist **")
         elif inst == '':
             print("** instance id missing **")
-        elif instnf == None:
-            print("** instance not found **") 
+        elif instnf is None:
+            print("** instance not found **")
         elif len(attrbs) < 2:
             print("** attribute name missing **")
         elif len(attrbs) < 3:
@@ -140,43 +137,40 @@ class HBNBCommand(cmd.Cmd):
         objects = storage.all()
         lst = []
         if instance:
-            for k,v in objects.items():
-                if k.startswith(instance):
-                    lst.append(str(v))
+            lst.extend(str(v) for k, v in objects.items() if k.startswith(instance))
         else:
-            for k,v in objects.items():
-                lst.append(str(v))
+            lst.extend(str(v) for k, v in objects.items())
         return lst
     def default(self, line):
         '''Enables calking a ckass with dot notation'''
-        if '.' in line:
-            linesplit = re.split(r'\.|\(|\)', line)
-            command = linesplit[0]
-            method = linesplit[1]
-            instId = linesplit[2].strip('"')
-            if command in self.classes:
-                if method == 'all':
-                    print(self.get_instances(command))
-                if method == 'count':
-                    print(len(self.get_instances(command)))
-                if method == 'show':
-                    self.do_show(command+' '+instId)
-                if method == 'destroy':
-                    self.do_destroy(command+' '+instId)
-                if method == 'update':
-                    if '{' in line:
-                        attr = linesplit[2]
-                        attrb = re.split(r'\, |\{}', attr)
-                        print(attrb)
-                        print(len(attrb))
-                        print(type(attrb))
-                    else:
-                        attr = linesplit[2]
-                        attrb = re.split(r'\,', attr)
-                        Id = attrb[0].strip(' "')
-                        attrbName = attrb[1].strip(' "')
-                        attrbValue = attrb[2].strip(' "')
-                        self.do_update(command+' '+Id+' '+attrbName+' '+attrbValue)
+        if '.' not in line:
+            return
+        linesplit = re.split(r'\.|\(|\)', line)
+        command = linesplit[0]
+        method = linesplit[1]
+        instId = linesplit[2].strip('"')
+        if command in self.classes:
+            if method == 'all':
+                print(self.get_instances(command))
+            elif method == 'count':
+                print(len(self.get_instances(command)))
+            elif method == 'destroy':
+                self.do_destroy(f'{command} {instId}')
+            elif method == 'show':
+                self.do_show(f'{command} {instId}')
+            elif method == 'update':
+                attr = linesplit[2]
+                if '{' in line:
+                    attrb = re.split(r'\, |\{}', attr)
+                    print(attrb)
+                    print(len(attrb))
+                    print(type(attrb))
+                else:
+                    attrb = re.split(r'\,', attr)
+                    Id = attrb[0].strip(' "')
+                    attrbName = attrb[1].strip(' "')
+                    attrbValue = attrb[2].strip(' "')
+                    self.do_update(f'{command} {Id} {attrbName} {attrbValue}')
 
 
 

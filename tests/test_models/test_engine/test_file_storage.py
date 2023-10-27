@@ -85,7 +85,7 @@ class TestFileStorage(unittest.TestCase):
         user.id = "123455"
         user.name = "Kevin"
         storage.new(user)
-        key = user.__class__.__name__ + "." + str(user.id)
+        key = f"{user.__class__.__name__}.{user.id}"
         self.assertIsNotNone(obj[key])
 
     def test_reload_filestorage(self):
